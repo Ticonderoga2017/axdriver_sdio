@@ -1,16 +1,13 @@
 //! SDIO 主机控制器抽象层  
-//!  
-//! 提供 `SdioHost` trait（数据传输）和 `SdioIrqControl` trait（中断控制），  
-//! 以及 SDIO 协议级常量（CCCR、CMD、OCR、R5）。  
 
 #![no_std]
 
 pub mod cccr;
 pub mod cmd;
 pub mod error;
-pub mod irq;
 
-use error::SdioError;
+pub use cccr::SDIO_DEFAULT_BLOCK_SIZE;
+pub use error::SdioError;
 
 /// SDIO 主机控制器抽象  
 ///  
@@ -39,12 +36,20 @@ pub trait SdioHost: Send + Sync {
     fn set_block_size(&self, func: u8, size: u16) -> Result<(), SdioError>;
 
     /// 设置 SDIO 时钟频率（Hz）  
-    fn set_clock(&self, _hz: u32) -> Result<(), SdioError> {
-        Ok(())
-    }
+    fn set_clock(&self, _hz: u32) -> Result<(), SdioError>;
+
     /// 使能指定 SDIO function  
     fn enable_func(&self, func: u8) -> Result<(), SdioError>;
 
     /// 获取 SDIO 卡的 vendor/device ID  
     fn vendor_device_id(&self) -> (u16, u16);
+
+    /// 屏蔽 SDIO 卡中断（CARD_INT）    
+    ///    
+    /// 在 SDIO 总线操作（CMD52/CMD53）期间调用，防止 CARD_INT    
+    /// 电平触发导致 ISR 重入。操作完成后调用 `unmask_card_irq()` 恢复。
+    fn mask_card_irq(&self);
+
+    /// 恢复 SDIO 卡中断（CARD_INT）
+    fn unmask_card_irq(&self);
 }

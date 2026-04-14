@@ -7,10 +7,6 @@ pub enum SdioError {
     Timeout,
     /// CRC 校验失败  
     CrcError,
-    /// 数据传输错误  
-    DataError,
-    /// 卡未检测到  
-    NoCard,
     /// 不支持的操作  
     Unsupported,
     /// 通用 IO 错误  
@@ -22,8 +18,6 @@ impl core::fmt::Display for SdioError {
         match self {
             Self::Timeout => write!(f, "SDIO timeout"),
             Self::CrcError => write!(f, "SDIO CRC error"),
-            Self::DataError => write!(f, "SDIO data error"),
-            Self::NoCard => write!(f, "SDIO card not detected"),
             Self::Unsupported => write!(f, "SDIO unsupported operation"),
             Self::IoError => write!(f, "SDIO I/O error"),
         }
