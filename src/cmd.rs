@@ -35,9 +35,17 @@ pub const R5_IO_CURRENT_STATE: u32 = 0x3 << 12;
 pub const R5_ERROR: u32 = 1 << 11;
 pub const R5_FUNCTION_NUMBER: u32 = 1 << 9;
 pub const R5_OUT_OF_RANGE: u32 = 1 << 8;
+/// R5 响应数据字节掩码 (bits 7:0)  
+pub const R5_DATA_MASK: u32 = 0xFF;
 
 pub const R5_ERROR_MASK: u32 =
     R5_COM_CRC_ERROR | R5_ILLEGAL_COMMAND | R5_ERROR | R5_FUNCTION_NUMBER | R5_OUT_OF_RANGE;
+
+/// R4 响应 bit 31: Card Ready（与 OCR_IORDY 相同，语义别名）  
+pub const R4_READY: u32 = OCR_IORDY;
+
+/// R4 响应中 OCR 电压窗口掩码（bits 8-23）  
+pub const R4_OCR_MASK: u32 = 0x00FF_FF00;
 
 /// CMD52/CMD53 参数构造常量
 pub const CMD52_RW_FLAG: u32 = 1 << 31;
